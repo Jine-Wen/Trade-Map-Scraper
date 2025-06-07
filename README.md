@@ -39,7 +39,7 @@
        git clone https://github.com/你的帳號/trademap-scraper.git  
        cd trademap-scraper  
 
-2. **建立並啟用虛擬環境**（可選，但強烈建議）  
+2. **建立並啟用虛擬環境**
        
        python3 -m venv venv  
        source venv/bin/activate  
