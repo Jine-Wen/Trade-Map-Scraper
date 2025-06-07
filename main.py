@@ -1,7 +1,7 @@
 from scraper import TradeMapScraper
 def main():
-    username = "CYLiu3@univacco.com"
-    password = "CYLiu852"
+    username = "Your Account"
+    password = "Your Password"
     product_country_pairs = [("321210", "251")]
 
     # 爬取數據
