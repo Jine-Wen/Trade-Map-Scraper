@@ -1,0 +1,13 @@
+2024-12-10 16:25:27,288 - INFO - Logger initialized.
+2024-12-10 16:25:28,488 - INFO - WebDriver initialized with headers.
+2024-12-10 16:26:05,147 - INFO - Login successful.
+2024-12-10 16:26:10,468 - INFO - Selected option '32' in dropdown 'ctl00_NavigationControl_DropDownList_Product'.
+2024-12-10 16:26:23,239 - INFO - Selected option '3212' in dropdown 'ctl00_NavigationControl_DropDownList_Product'.
+2024-12-10 16:26:33,508 - INFO - Selected option '321210' in dropdown 'ctl00_NavigationControl_DropDownList_Product'.
+2024-12-10 16:26:38,382 - INFO - Selected option '251' in dropdown 'ctl00_NavigationControl_DropDownList_Country'.
+2024-12-10 16:26:38,454 - INFO - Trade type set to 'Import'
+2024-12-10 16:26:55,822 - INFO - Adjusted page size to 300.
+2024-12-10 16:26:55,884 - INFO - Scraped 43 rows from table 'ctl00_PageContent_MyGridView1'.
+2024-12-10 16:26:55,887 - INFO - Data saved to data/raw/321210_251.csv
+2024-12-10 16:27:06,894 - INFO - Logged out successfully.
+2024-12-10 16:27:08,986 - INFO - Driver quit.
