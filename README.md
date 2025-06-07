@@ -1,99 +1,102 @@
-TradeMap 自動化爬蟲工具
-這是一個我自己開發的小工具，用來從 TradeMap.org 上抓進口貿易資料。因為 TradeMap 本身雖然資料很豐富，但使用者介面偏向人工操作，不太適合需要大量查詢或自動化流程的情境，所以我就用 Selenium 做了這個自動化爬蟲，幫忙把資料抓下來儲存成 CSV，後續就能方便做分析或整合到其他系統。
+# TradeMap 自動化爬蟲工具
 
-💡 功能簡介
-這個工具主要做以下幾件事：
+## 🚀 簡介
+嗨，我是工程師小張，開發了這個「TradeMap 自動化爬蟲工具」，目的是幫你省去人手操作 TradeMap 網站的麻煩。  
+你只要設定好 HS Code、國家代碼，工具就會自己登入、抓資料，最後生成 CSV，讓你能馬上拿去分析或整合到其他系統。
 
-自動登入 TradeMap 帳號
+---
 
-選擇產品（HS code）與目標國家
+## 💡 主要功能
+1. **自動登入**：使用 Selenium 模擬瀏覽器登入 TradeMap 帳號  
+2. **條件設定**：自動選擇 HS Code & 目標國家、切換到「進口資料」  
+3. **資料擷取**：抓取網頁上的表格並用 BeautifulSoup 解析  
+4. **存成 CSV**：把抓到的資料轉成 Pandas DataFrame，再匯出到 `data/raw/`  
+5. **自動登出**：完成後安全登出並關閉瀏覽器  
+6. **完整日誌**：執行過程都會記錄到 `logs/scraper_log.txt`  
 
-設定為「進口資料」的模式
+> 為了降低被網站封鎖的風險，工具內建：
+> - 隨機延遲（模擬人類瀏覽習慣）
+> - 隨機打字速度
+> - 隨機 User-Agent  
 
-擷取網頁上的表格資料
+---
 
-轉成 DataFrame 並儲存為 .csv 檔
+## 🏗 專案結構
+.
+├── main.py # 主程式：設定帳密 & 查詢項目，啟動爬蟲
+├── scraper.py # TradeMapScraper 類別，封裝所有爬蟲邏輯
+├── logs/
+│ └── scraper_log.txt # 執行日誌
+└── data/
+└── raw/ # 爬取的 CSV 結果
 
-自動登出、關閉瀏覽器
+yaml
+複製
+編輯
 
-全程有 log 紀錄發生了什麼事
+---
 
-整個過程會模擬人類操作，包括打字速度、隨機等待時間、隨機 User-Agent，盡量讓行為自然一點，減少被網站封鎖的風險。
+## 📦 安裝教學
 
-🧱 專案結構
+1. **複製／下載專案**  
+   ```bash
+   git clone https://github.com/你的帳號/trademap-scraper.git
+   cd trademap-scraper
+建立並啟用虛擬環境（可選，但強烈建議）
+
 bash
 複製
 編輯
-.
-├── main.py                  # 主程式：設定帳號/密碼和要查詢的項目，開始爬蟲
-├── scraper.py               # TradeMapScraper 類別，封裝所有爬蟲邏輯
-├── logs/
-│   └── scraper_log.txt      # 執行過程中寫入的 log
-└── data/
-    └── raw/                 # 所有輸出的 .csv 檔案會存這裡
-🚀 如何使用
-1. 安裝必要套件
-這個工具是用 Python 寫的，要先安裝以下套件（建議使用虛擬環境）：
+python3 -m venv venv
+source venv/bin/activate
+安裝必要套件
 
 bash
 複製
 編輯
 pip install selenium beautifulsoup4 pandas
-2. 安裝 ChromeDriver
-這個爬蟲是操作 Chrome 瀏覽器，需要安裝對應版本的 ChromeDriver。安裝完記得把它放到環境變數中或是跟程式放在同一個目錄。
+下載 ChromeDriver
 
-3. 設定登入資訊與查詢參數
-打開 main.py，修改以下幾行：
+依照你的 Chrome 版本，下載對應的 ChromeDriver
+
+把執行檔放到 $PATH 或跟 main.py 同一資料夾
+
+⚙️ 設定 & 執行
+編輯 main.py，把你的 TradeMap 帳號、密碼，以及要查的 HS Code & 國家代碼填好：
 
 python
 複製
 編輯
 username = "你的TradeMap帳號"
 password = "你的密碼"
-product_country_pairs = [("321210", "251")]  # [(產品代碼, 國家代碼)]
-每一組 (產品代碼, 國家代碼) 代表一個查詢任務。產品代碼是 HS Code，國家代碼可以從 TradeMap 網站中查到。
+# 範例：查 HS Code 321210 的國家代碼 251（品項、國家可自行串 list）
+product_country_pairs = [("321210", "251")]
+執行程式：
 
-4. 執行程式
 bash
 複製
 編輯
 python main.py
-程式會自動打開 Chrome 瀏覽器、登入、選擇條件、擷取資料，最後登出並關閉視窗。
-
-📁 輸出結果
-程式會把查詢結果存成 .csv，檔案放在 data/raw/ 目錄下。檔名格式是 {產品代碼}_{國家代碼}.csv，例如：
+成功執行後，資料會輸出到：
 
 bash
 複製
 編輯
 data/raw/321210_251.csv
-內容就是 TradeMap 表格上的欄位和資料，方便之後用 Excel 或 Python 處理。
+🛠 技術細節
+Selenium + ChromeDriver：自動化操作瀏覽器
 
-🛠 一些技術細節
-透過 Selenium + ChromeDriver 操作網站互動
+BeautifulSoup：解析 HTML，提取表格內容
 
-BeautifulSoup 抓 HTML 表格轉成結構化資料
+Pandas：整理成 DataFrame，再匯出 CSV
 
-為了防止被偵測為 bot，有加入隨機延遲、模擬打字等行為
+反偵測機制：隨機延遲、打字、User-Agent，降低被封風險
 
-登入與登出都有錯誤處理，如果網站結構改了，log 檔會記錄錯誤方便追蹤
+Error Handling：若頁面結構變動或其他問題，會捕捉錯誤並寫進 scraper_log.txt
 
-⚠️ 注意事項
-TradeMap 有流量限制，如果查太多可能會被暫時鎖帳號，請斟酌使用。
+⚠️ 使用注意
+TradeMap 有流量限制，若大量查詢可能會被暫時鎖帳號
 
-帳號密碼目前是寫在 main.py 裡面，建議實際部署時改用 .env 或其他方式管理機密資訊。
+目前帳密是寫在程式裡，請務必在正式環境改用 .env 或其他安全方式管理
 
-如果 TradeMap 的頁面結構未來有變，程式可能需要跟著調整。
-
-🔄 TODO（可能之後會加上的功能）
-支援 .env 管理帳密
-
-讓 CLI 可以帶參數執行（不用寫死在程式裡）
-
-加入 retry 機制（網站 timeout 或失敗時自動重試）
-
-支援出口資料（目前是固定抓進口）
-
-自動解析多頁資料
-
-有興趣可以自由 fork 或改寫，如果你也需要大量查詢 TradeMap 資料，應該會派得上用場。
+若 TradeMap 網站改版，可能需要更新爬蟲邏輯
